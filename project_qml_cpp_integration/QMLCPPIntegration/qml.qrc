@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/box_background.png</file>
+        <file>images/main_background.png</file>
+        <file>TaskBox.qml</file>
+        <file>Background.qml</file>
+        <file>main.qml</file>
+        <file>ApplicationFlow.qml</file>
+        <file>TaskCanvas.qml</file>
+        <file>SampleButton.qml</file>
+        <file>images/sample_button.png</file>
+    </qresource>
+</RCC>

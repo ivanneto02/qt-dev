@@ -1,0 +1,10 @@
+debug/Task.o
+debug/TaskList.o
+debug/Taskcomponent.o
+debug/backend.o
+debug/main.o
+debug/qmlcppintegration_qmltyperegistrations.o
+debug/qrc_qml.o
+debug/qrc_qmake_qmake_qm_files.o
+debug/qrc_qmake_qmake_immediate.o
+debug/moc_backend.o

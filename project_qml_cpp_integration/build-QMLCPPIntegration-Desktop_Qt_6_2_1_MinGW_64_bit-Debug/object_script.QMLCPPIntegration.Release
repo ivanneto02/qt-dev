@@ -1,0 +1,10 @@
+release/Task.o
+release/TaskList.o
+release/Taskcomponent.o
+release/backend.o
+release/main.o
+release/qmlcppintegration_qmltyperegistrations.o
+release/qrc_qml.o
+release/qrc_qmake_qmake_qm_files.o
+release/qrc_qmake_qmake_immediate.o
+release/moc_backend.o
