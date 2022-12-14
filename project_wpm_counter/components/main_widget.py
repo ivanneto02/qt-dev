@@ -9,20 +9,28 @@ from .key_log import Keylog
 
 from datetime import *
 
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(".", "helpers")))
+
+# import helpers
+from cpm_wpm_calculation import calculate_cpm, calculate_wpm
+
 class MainWidget(QWidget):
     def __init__(self):
         super().__init__()
 
-        self._count = 0
+        self._wpmcount = 0
+        self._cpmcount = 0
 
-        self.wpmcounter = WPM_Counter(self._count)
-        self.cpmcounter = CPM_Counter(self._count)
+        self.wpmcounter = WPM_Counter(self._wpmcount)
+        self.cpmcounter = CPM_Counter(self._cpmcount)
 
-        self.char_gran = 50
+        self._char_hist_len = 50
 
-        # Make char_gran-sized list to store characters
-        self._chars = [''] * self.char_gran # '' in _chars means no character there
-        self._chars_ts = [None] * self.char_gran # 0 means no timestamp there
+        # Make char_hist_len list to store characters
+        self._chars = [] # empty, will do nothing until size > 1
+        self._chars_ts = [] # empty, will do nothing until size > 1
         # We pass self._chars and self._charts_ts up to parent
 
         layout = QVBoxLayout()
@@ -38,15 +46,22 @@ class MainWidget(QWidget):
         self.setLayout(layout)
 
     @property
-    def count(self):
-        return self._count
+    def cpmcount(self):
+        return self._cpmcount
+
+    @property
+    def wpmcount(self):
+        return self._wpmcount
     
-    @count.setter
-    def count(self, count):
-        print(f"    setting count to {self.count}")
-        self._count = count
-        self.wpmcounter.count = self._count
-        self.cpmcounter.count = self._count
+    @cpmcount.setter
+    def cpmcount(self, count):
+        self._cpmcount = count
+        self.cpmcounter.count = self._cpmcount
+
+    @wpmcount.setter
+    def wpmcount(self, count):
+        self._wpmcount = count
+        self.wpmcounter.count = self._wpmcount
 
     def handleCharEvent(self, event, ts):
         '''
@@ -55,25 +70,13 @@ class MainWidget(QWidget):
             and give those values back to self.wpmcounter and
             self.cpmcounter
         '''
-        self._chars = self._chars[1:] + [event.key]
-        self._chars_ts = self._chars_ts[1:] + [ts]
+        self._chars.append(event.key)
+        self._chars_ts.append(ts)
 
-        # compute sum of characters
-        sum = 0
-        for i in range(0, len(self._chars)):
-            if self._chars[i] != '':
-                sum += 1
+        if len(self._chars) >= self._char_hist_len:
+            self._chars = self._chars[1:]
+            self._chars_ts = self._chars_ts[1:]
 
-        timedeltas = []
-        for i in range(0, len(self._chars_ts)):
-            if self._chars_ts[i]:
-                timedeltas.append(self._chars_ts[i] - timedelta(0))
-            else:
-                timedeltas.append(timedelta(0))
-
-        try:
-            avg_timedelta = sum(timedeltas, timedelta(0)) / len(timedeltas)
-            self.wpmcounter.count = sum / (avg_timedelta.seconds * 60)
-        except:
-            avg_timedelta = timedelta(0)
-            self.wpmcounter.count = 0
+        # update CPM counter
+        self.cpmcount = calculate_cpm(self._chars, self._chars_ts)
+        self.wpmcount = calculate_wpm(self._chars, self._chars_ts)
