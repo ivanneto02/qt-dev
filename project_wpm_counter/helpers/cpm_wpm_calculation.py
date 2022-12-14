@@ -3,7 +3,7 @@ from pynput import keyboard
 def calculate_cpm(chars, times):
 
     # in case we only really have one record
-    if (len(chars) == 1):
+    if (len(chars) <= 1):
         return 0
 
     sum = 0

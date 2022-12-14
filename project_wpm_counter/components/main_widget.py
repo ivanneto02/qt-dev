@@ -70,6 +70,15 @@ class MainWidget(QWidget):
             and give those values back to self.wpmcounter and
             self.cpmcounter
         '''
+        # if (len(self._chars) >= 1):
+        #     i = len(self._chars_ts) - 1
+        #     tims = self._chars_ts
+        #     if (tims[i] - tims[i - 1]).microseconds >= (1 * 10E6):
+        #         # reset the characters and timestamps if we wait
+        #         # for longer than 3 seconds
+        #         self._chars = []
+        #         self._chars_ts = []
+
         self._chars.append(event.key)
         self._chars_ts.append(ts)
 
